@@ -6,16 +6,21 @@ import './index.css'
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          {/* Mostra a Landing Page quando o link for o principal */}
-          <Route path="/" element={<Index />} />
-          
-          {/* Mostra o Admin apenas quando escreveres /admin no fim do link */}
-          <Route path="/admin" element={<AdminDashboard />} />
-        </Routes>
-      </BrowserRouter>
-      <Toaster />
+
+
+// No teu src/App.tsx
+<BrowserRouter basename="/dimas-lingua-tech">
+  <Routes>
+    <Route path="/" element={<Index />} />
+    <Route path="/admin" element={<AdminDashboard />} />
+  </Routes>
+</BrowserRouter>
+
+
+
+
+
+     
     </>
   );
 }
