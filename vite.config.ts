@@ -4,7 +4,7 @@ import path from "path"
 
 export default defineConfig({
   // Esta linha diz ao site para funcionar no subdiretório do GitHub
-  base: ''/dimas-lingua-tech/', 
+  base: './', 
   plugins: [react()],
   resolve: {
     alias: {
