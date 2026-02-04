@@ -3,8 +3,8 @@ import react from '@vitejs/plugin-react-swc'
 import path from "path"
 
 export default defineConfig({
-  // ADICIONA ESTA LINHA ABAIXO (usa o nome exato do teu repositório no GitHub)
-  base: '/dimas-lingua-tech/', 
+  // Esta linha diz ao site para funcionar no subdiretório do GitHub
+  base: './', 
   plugins: [react()],
   resolve: {
     alias: {
