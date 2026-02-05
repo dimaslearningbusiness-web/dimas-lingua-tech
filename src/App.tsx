@@ -3,6 +3,7 @@ import Index from "./pages/Index";
 import AdminDashboard from "./pages/AdminDashboard";
 import { Toaster } from "@/components/ui/toaster";
 import './index.css';
+import Auth from "./pages/Auth";
 
 function App() {
   return (
