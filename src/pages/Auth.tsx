@@ -24,33 +24,15 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 font-sans">
-      <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Access Portal</h2>
-        <input 
-          type="email" 
-          placeholder="Email" 
-          className="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          onChange={(e) => setEmail(e.target.value)} 
-        />
-        <input 
-          type="password" 
-          placeholder="Password" 
-          className="w-full p-3 mb-6 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          onChange={(e) => setPassword(e.target.value)} 
-        />
-        <button 
-          onClick={() => handleAuth("login")}
-          disabled={loading}
-          className="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 mb-3 transition"
-        >
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f3f4f6', padding: '20px', fontFamily: 'sans-serif' }}>
+      <div style={{ background: 'white', padding: '40px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px' }}>
+        <h2 style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Portal Access</h2>
+        <input type="email" placeholder="Email" style={{ width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ddd', borderRadius: '6px' }} onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" style={{ width: '100%', padding: '12px', marginBottom: '20px', border: '1px solid #ddd', borderRadius: '6px' }} onChange={(e) => setPassword(e.target.value)} />
+        <button onClick={() => handleAuth("login")} disabled={loading} style={{ width: '100%', padding: '12px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '10px' }}>
           {loading ? "Loading..." : "Login"}
         </button>
-        <button 
-          onClick={() => handleAuth("signup")}
-          disabled={loading}
-          className="w-full bg-gray-200 text-gray-700 p-3 rounded-lg font-semibold hover:bg-gray-300 transition"
-        >
+        <button onClick={() => handleAuth("signup")} disabled={loading} style={{ width: '100%', padding: '12px', backgroundColor: '#e5e7eb', color: '#374151', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
           Create Account
         </button>
       </div>
