@@ -1,8 +1,7 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import AdminDashboard from "./pages/AdminDashboard";
 import Auth from "./pages/Auth";
-import "./index.css";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
