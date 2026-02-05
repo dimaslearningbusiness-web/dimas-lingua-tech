@@ -34,17 +34,22 @@ const Auth = () => {
 
   const handleAuth = async (type: "login" | "signup") => {
     setLoading(true);
-    const { error } = type === "login" 
-      ? await supabase.auth.signInWithPassword({ email, password })
-      : await supabase.auth.signUp({ email, password });
+    try {
+      const { error } = type === "login" 
+        ? await supabase.auth.signInWithPassword({ email, password })
+        : await supabase.auth.signUp({ email, password });
 
-    if (error) {
-      alert("Error: " + error.message);
-    } else {
-      alert(type === "login" ? "Welcome back!" : "Account created!");
-      navigate("/admin");
+      if (error) {
+        alert("Error: " + error.message);
+      } else {
+        alert(type === "login" ? "Welcome back!" : "Account created!");
+        navigate("/admin");
+      }
+    } catch (err) {
+      alert("System error. Check your database connection.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -53,10 +58,10 @@ const Auth = () => {
         <h2 style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Access Portal</h2>
         <input type="email" placeholder="Email" style={{ width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #ddd', borderRadius: '6px', boxSizing: 'border-box' }} onChange={(e) => setEmail(e.target.value)} />
         <input type="password" placeholder="Password" style={{ width: '100%', padding: '12px', marginBottom: '20px', border: '1px solid #ddd', borderRadius: '6px', boxSizing: 'border-box' }} onChange={(e) => setPassword(e.target.value)} />
-        <button onClick={() => handleAuth("login")} disabled={loading} style={{ width: '100%', padding: '12px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '10px' }}>
+        <button onClick={() => handleAuth("login")} disabled={loading} style={{ width: '100%', padding: '12px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '10px' }}>
           {loading ? "Loading..." : "Login"}
         </button>
-        <button onClick={() => handleAuth("signup")} disabled={loading} style={{ width: '100%', padding: '12px', backgroundColor: '#e5e7eb', color: '#374151', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
+        <button onClick={() => handleAuth("signup")} disabled={loading} style={{ width: '100%', padding: '12px', backgroundColor: '#e5e7eb', color: '#374151', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
           Create Account
         </button>
         <p onClick={() => navigate("/")} style={{ textAlign: 'center', marginTop: '20px', color: '#6b7280', cursor: 'pointer', textDecoration: 'underline' }}>Back to home</p>
@@ -70,7 +75,7 @@ const Admin = () => (
   <div style={{ padding: '40px', fontFamily: 'sans-serif' }}>
     <h1>Admin Dashboard</h1>
     <p>Welcome to the management area.</p>
-    <button onClick={() => window.location.hash = '/'} style={{ padding: '10px 20px', cursor: 'pointer' }}>Logout</button>
+    <button onClick={() => window.location.hash = '/'} style={{ padding: '10px 20px', cursor: 'pointer', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '8px' }}>Logout</button>
   </div>
 );
 
