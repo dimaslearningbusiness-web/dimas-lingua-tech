@@ -1,17 +1,19 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import AdminDashboard from "./pages/AdminDashboard";
-import { Toaster } from "@/components/ui/toaster";
+import './index.css';
 
 function App() {
   return (
-    <HashRouter> 
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-      </Routes>
-      <Toaster />
-    </HashRouter>
+    <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '100vh',
+      flexDirection: 'column',
+      fontFamily: 'sans-serif'
+    }}>
+      <h1>Dimas Learning Business</h1>
+      <p>O site está a carregar corretamente!</p>
+      <button onClick={() => window.location.href += 'admin'}>Ir para Admin</button>
+    </div>
   );
 }
 
