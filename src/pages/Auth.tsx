@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
   const navigate = useNavigate();
 
   const handleAuth = async (type: "login" | "signup") => {
@@ -19,24 +15,44 @@ const Auth = () => {
       : await supabase.auth.signUp({ email, password });
 
     if (error) {
-      toast({ variant: "destructive", title: "Error", description: error.message });
+      alert(error.message);
     } else {
-      toast({ title: "Success!", description: type === "login" ? "Welcome back!" : "Account created!" });
-      navigate("/admin"); // Redireciona para o dashboard
+      alert(type === "login" ? "Welcome back!" : "Account created!");
+      navigate("/admin");
     }
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Student & Admin Portal</h2>
-        <div className="space-y-4">
-          <Input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-          <Input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-          <Button className="w-full" onClick={() => handleAuth("login")} disabled={loading}>Login</Button>
-          <Button variant="outline" className="w-full" onClick={() => handleAuth("signup")} disabled={loading}>Create Account</Button>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 font-sans">
+      <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-lg">
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Access Portal</h2>
+        <input 
+          type="email" 
+          placeholder="Email" 
+          className="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onChange={(e) => setEmail(e.target.value)} 
+        />
+        <input 
+          type="password" 
+          placeholder="Password" 
+          className="w-full p-3 mb-6 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onChange={(e) => setPassword(e.target.value)} 
+        />
+        <button 
+          onClick={() => handleAuth("login")}
+          disabled={loading}
+          className="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 mb-3 transition"
+        >
+          {loading ? "Loading..." : "Login"}
+        </button>
+        <button 
+          onClick={() => handleAuth("signup")}
+          disabled={loading}
+          className="w-full bg-gray-200 text-gray-700 p-3 rounded-lg font-semibold hover:bg-gray-300 transition"
+        >
+          Create Account
+        </button>
       </div>
     </div>
   );
