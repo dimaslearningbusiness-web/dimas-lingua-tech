@@ -4,8 +4,8 @@ import { createClient } from '@supabase/supabase-js'; // Importação direta
 import { GraduationCap, LayoutDashboard, LogOut, Users, DollarSign, BookOpen, Play, Shield } from 'lucide-react';
 
 // --- LIGAÇÃO SUPABASE (DIRECTA NO APP) ---
-const supabaseUrl = 'https://TEU-ID.supabase.co'; // <--- MUDA ISTO
-const supabaseAnonKey = 'TUA-CHAVE-ANON';        // <--- MUDA ISTO
+const supabaseUrl = 'https://tockiucmhkoxvauytzfq.supabase.co'; // <--- MUDA ISTO
+const supabaseAnonKey = 'sb_publishable_W7SzJuYMbF9qN71OCH1nqw_YaWGI5WD';        // <--- MUDA ISTO
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // --- COMPONENTES ---
