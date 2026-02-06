@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 // CONFIRMA SE ESTES VALORES SÃO OS DO PROJETO NOVO
-const supabaseUrl = 'https://TEU_ID_NOVO.supabase.co';
-const supabaseAnonKey = 'TUA_CHAVE_ANON_NOVA';
+const supabaseUrl = 'https://tockiucmhkoxvauytzfq.supabase.co';
+const supabaseAnonKey = 'sb_publishable_W7SzJuYMbF9qN71OCH1nqw_YaWGI5WD';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
