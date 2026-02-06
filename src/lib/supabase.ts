@@ -1,18 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 
-// SUBSTITUI PELOS VALORES QUE COPIASTE NO PASSO 1
-const supabaseUrl = 'https://teu-id-novo.supabase.co';
-const supabaseAnonKey = 'tua-chave-anon-public-aqui';
-
-// Verificação de segurança para a consola
-if (supabaseUrl.includes('placeholder')) {
-  console.warn("⚠️ URL do Supabase ainda é o exemplo!");
-}
+// CONFIRMA SE ESTES VALORES SÃO OS DO PROJETO NOVO
+const supabaseUrl = 'https://TEU_ID_NOVO.supabase.co';
+const supabaseAnonKey = 'TUA_CHAVE_ANON_NOVA';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
+    storageKey: 'dimas-app-new-session', // Nome novo para não colidir com o antigo
     persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true
-  }
+    detectSessionInUrl: false // Evita que o URL baralhe o login
+  },
+  global: {
+    headers: { 'x-my-custom-header': 'dimas-learning' },
+  },
 });
