@@ -1,6 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+// NOTA: Se criaste um projeto novo, confirma se o URL começa por letras diferentes de "ptjn..."
+const supabaseUrl = 'https://TEU_NOVO_ID.supabase.co'; 
+const supabaseAnonKey = 'TUA_NOVA_ANON_KEY_AQUI';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+if (supabaseAnonKey.includes('VITE_')) {
+  console.error("ERRO: Estás a tentar usar o nome da variável em vez da chave real!");
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);;
