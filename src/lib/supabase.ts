@@ -1,11 +1,18 @@
 import { createClient } from '@supabase/supabase-js';
 
-// NOTA: Se criaste um projeto novo, confirma se o URL começa por letras diferentes de "ptjn..."
-const supabaseUrl = 'https://TEU_NOVO_ID.supabase.co'; 
-const supabaseAnonKey = 'TUA_NOVA_ANON_KEY_AQUI';
+// SUBSTITUI PELOS VALORES QUE COPIASTE NO PASSO 1
+const supabaseUrl = 'https://teu-id-novo.supabase.co';
+const supabaseAnonKey = 'tua-chave-anon-public-aqui';
 
-if (supabaseAnonKey.includes('VITE_')) {
-  console.error("ERRO: Estás a tentar usar o nome da variável em vez da chave real!");
+// Verificação de segurança para a consola
+if (supabaseUrl.includes('placeholder')) {
+  console.warn("⚠️ URL do Supabase ainda é o exemplo!");
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);;
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true
+  }
+});
