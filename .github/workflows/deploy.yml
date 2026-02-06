@@ -27,7 +27,7 @@ jobs:
         run: npm install
 
       - name: Build
-        # ESTA LINHA ABAIXO É A MAIS IMPORTANTE
+        # Aqui garantimos que o Vite "vê" as chaves durante a compilação
         run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
