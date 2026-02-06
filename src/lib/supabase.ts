@@ -1,15 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Tenta ler das variáveis de ambiente do GitHub Actions
+// O Vite exige o prefixo VITE_ para expor estas variáveis ao navegador
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Se as chaves faltarem, este log vai aparecer na consola do navegador (F12)
+// Log de depuração (aparecerá no F12 se a chave estiver vazia)
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error("Erro: Variáveis de ambiente do Supabase não encontradas. Verifica os Secrets no GitHub.");
+  console.error("Configuração do Supabase incompleta. Verifica os Secrets no GitHub.");
 }
 
 export const supabase = createClient(
-  supabaseUrl || 'https://placeholder-url.supabase.co', 
-  supabaseAnonKey || 'placeholder-key'
+  supabaseUrl || "", 
+  supabaseAnonKey || ""
 );
