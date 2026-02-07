@@ -55,6 +55,10 @@ export default function AdminDashboardSupabase() {
   }
 
   return (
+    <div className="bg-red-600 text-white p-4 rounded">
+  ADMIN DASHBOARD — FICHEIRO CERTO
+</div>
+
     <div className="p-6 space-y-6">
       {/* Pending accounts */}
       <section className="bg-white rounded-3xl border shadow-sm p-6">
