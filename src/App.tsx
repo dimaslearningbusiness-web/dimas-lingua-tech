@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route, useNavigate, Link } from "react-router-dom"
+import { HashRouter, Routes, Route, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { createClient } from "@supabase/supabase-js"
 import {
@@ -19,7 +19,10 @@ const supabaseAnonKey = "sb_publishable_W7SzJuYMbF9qN71OCH1nqw_YaWGI5WD"
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const ADMIN_EMAIL = "dimaslearningbusiness@gmail.com"
 
-// --------- HOOK DE AUTENTICAÇÃO + PERFIL ---------
+// IMPORTANT: adjust this later to your GitHub Pages URL
+const REDIRECT_URL = window.location.origin + window.location.pathname
+
+// --------- AUTH + PROFILE HOOK ---------
 const useAuthProfile = () => {
   const [user, setUser] = useState<any>(null)
   const [profile, setProfile] = useState<any>(null)
@@ -39,7 +42,6 @@ const useAuthProfile = () => {
           .eq("id", authUser.id)
           .single()
 
-        // criar perfil se não existir
         if (!prof) {
           const isAdmin = authUser.email === ADMIN_EMAIL
           const { data: inserted } = await supabase
@@ -48,7 +50,7 @@ const useAuthProfile = () => {
               id: authUser.id,
               email: authUser.email,
               role: isAdmin ? "admin" : "guest",
-              status: isAdmin ? "active" : "pending", // guests começam pending
+              status: isAdmin ? "active" : "pending",
             })
             .select()
             .single()
@@ -67,7 +69,7 @@ const useAuthProfile = () => {
   return { user, profile, loading }
 }
 
-// --------- PÁGINA PÚBLICA (HOME + CURSOS) ---------
+// --------- PUBLIC HOME (HOME + COURSES) ---------
 const PublicHome = () => {
   const { user, profile } = useAuthProfile()
   const [courses, setCourses] = useState<any[]>([])
@@ -82,7 +84,10 @@ const PublicHome = () => {
   }, [])
 
   const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({ provider: "google" })
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: REDIRECT_URL },
+    })
   }
 
   return (
@@ -98,7 +103,7 @@ const PublicHome = () => {
             Home
           </a>
           <a href="#courses" className="hover:text-blue-400">
-            Cursos
+            Courses
           </a>
           {user && profile?.status === "active" && (
             <button
@@ -115,7 +120,7 @@ const PublicHome = () => {
               onClick={handleLogin}
               className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold"
             >
-              Entrar
+              Sign in
             </button>
           ) : (
             <button
@@ -125,7 +130,7 @@ const PublicHome = () => {
               }}
               className="text-sm text-red-400 flex items-center gap-1"
             >
-              <LogOut size={16} /> Sair
+              <LogOut size={16} /> Sign out
             </button>
           )}
         </div>
@@ -138,13 +143,13 @@ const PublicHome = () => {
       >
         <div className="flex-1 space-y-4">
           <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-            Inglês Técnico para IT,{" "}
-            <span className="text-blue-400">com acompanhamento 1:1</span>
+            Technical English for IT,{" "}
+            <span className="text-blue-400">with 1:1 mentoring</span>
           </h1>
           <p className="text-slate-300 text-sm md:text-base max-w-xl">
-            Dimas Learning é uma plataforma criada especificamente para
-            programadores, testers e profissionais de tecnologia que querem
-            dominar o inglês técnico usado no dia a dia.
+            Dimas Learning is a platform built for developers, testers, and IT
+            professionals who want to master the real technical English used in
+            the industry.
           </p>
           {!user && (
             <button
@@ -152,32 +157,32 @@ const PublicHome = () => {
               className="mt-4 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold flex items-center gap-2"
             >
               <GraduationCap size={18} />
-              Começar com Google
+              Start with Google
             </button>
           )}
           {user && profile?.status === "pending" && (
             <p className="mt-4 text-amber-400 text-sm">
-              Conta criada. Aguarda a aprovação do Diretor Dimas para acederes
-              ao Dashboard.
+              Your account was created. Please wait for Director Dimas to approve
+              your access to the Dashboard.
             </p>
           )}
         </div>
         <div className="flex-1 max-w-md bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl">
           <p className="text-sm font-semibold text-blue-400 mb-2">
-            Roadmap personalizado
+            Personalized roadmap
           </p>
           <p className="text-slate-200 text-sm">
-            Acompanhamento individual, materiais personalizados e feedback
-            direto sobre o teu inglês em contexto de IT.
+            1:1 mentoring, custom materials, and direct feedback on your English
+            in real IT contexts.
           </p>
         </div>
       </section>
 
-      {/* LISTA DE CURSOS */}
+      {/* COURSE LIST */}
       <section id="courses" className="px-8 pb-16">
         <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
           <BookOpen size={20} />
-          Catálogo de Cursos
+          Course catalogue
         </h2>
         <div className="grid md:grid-cols-2 gap-4">
           {courses.map((c) => (
@@ -187,13 +192,13 @@ const PublicHome = () => {
             >
               <h3 className="font-semibold text-lg">{c.title}</h3>
               <p className="text-slate-300 text-sm mt-2">
-                {c.description || "Curso focado em comunicação técnica real."}
+                {c.description || "Technical English with real-world IT scenarios."}
               </p>
             </div>
           ))}
           {courses.length === 0 && (
             <p className="text-slate-400 text-sm">
-              Em breve cursos disponíveis. O Diretor está a preparar o conteúdo.
+              Courses coming soon. The director is preparing the content.
             </p>
           )}
         </div>
@@ -202,7 +207,7 @@ const PublicHome = () => {
   )
 }
 
-// --------- DASHBOARD (ADMIN / ALUNO) ---------
+// --------- DASHBOARD (ADMIN / STUDENT) ---------
 const Dashboard = () => {
   const { user, profile, loading } = useAuthProfile()
   const [courses, setCourses] = useState<any[]>([])
@@ -227,7 +232,6 @@ const Dashboard = () => {
         return
       }
 
-      // cursos (todos veem)
       const { data: c } = await supabase.from("courses").select("*")
       setCourses(c || [])
 
@@ -257,38 +261,36 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="p-20 text-center font-bold">
-        A ligar à base de dados real...
+        Connecting to the real database...
       </div>
     )
   }
 
   if (!user) {
-    return <div className="p-10">Não autenticado.</div>
+    return <div className="p-10">Not authenticated.</div>
   }
 
-  // Estado pending para guests
   if (!isAdmin && (!profile || profile.status === "pending")) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 p-10 text-center">
         <div className="max-w-md bg-white p-10 rounded-3xl shadow-xl">
           <Clock size={48} className="mx-auto text-amber-500 mb-4" />
-          <h2 className="text-2xl font-bold">Conta em Verificação</h2>
+          <h2 className="text-2xl font-bold">Account under review</h2>
           <p className="text-slate-500 mt-2">
-            O Diretor Dimas recebeu o teu registo. Aguarda a ativação para
-            acederes aos cursos.
+            Director Dimas has received your registration. Please wait until your
+            account is activated to access the courses.
           </p>
           <button
             onClick={() => supabase.auth.signOut().then(() => navigate("/"))}
             className="mt-6 text-blue-600 font-bold"
           >
-            Sair
+            Sign out
           </button>
         </div>
       </div>
     )
   }
 
-  // funções admin
   const handleCreateCourse = async () => {
     if (!newCourse.title.trim()) return
     await supabase.from("courses").insert([{ title: newCourse.title }])
@@ -335,7 +337,6 @@ const Dashboard = () => {
   )
   const enrollmentPending = enrollments.filter((e) => e.status === "pending")
 
-  // progresso simples por agora (podes ligar à tabela enrollments)
   const lessonsCompleted = profile?.lessons_completed || 0
   const totalLessons = profile?.total_lessons || 1
   const progress = Math.round((lessonsCompleted / totalLessons) * 100)
@@ -362,7 +363,7 @@ const Dashboard = () => {
               view === "courses" ? "bg-blue-600 text-white" : ""
             }`}
           >
-            <BookOpen size={18} /> Cursos
+            <BookOpen size={18} /> Courses
           </button>
           {isAdmin && (
             <>
@@ -372,7 +373,7 @@ const Dashboard = () => {
                   view === "students" ? "bg-blue-600 text-white" : ""
                 }`}
               >
-                <Users size={18} /> Alunos
+                <Users size={18} /> Students
               </button>
               <button
                 onClick={() => setView("requests")}
@@ -380,7 +381,7 @@ const Dashboard = () => {
                   view === "requests" ? "bg-blue-600 text-white" : ""
                 }`}
               >
-                <Check size={18} /> Pedidos
+                <Check size={18} /> Requests
               </button>
               <button
                 onClick={() => setView("materials")}
@@ -388,7 +389,7 @@ const Dashboard = () => {
                   view === "materials" ? "bg-blue-600 text-white" : ""
                 }`}
               >
-                <FileText size={18} /> Materiais
+                <FileText size={18} /> Materials
               </button>
             </>
           )}
@@ -397,21 +398,21 @@ const Dashboard = () => {
           onClick={() => supabase.auth.signOut().then(() => navigate("/"))}
           className="text-red-400 p-3 flex items-center gap-2 font-bold"
         >
-          <LogOut size={18} /> Sair
+          <LogOut size={18} /> Sign out
         </button>
       </aside>
 
-      {/* CONTEÚDO PRINCIPAL */}
+      {/* MAIN CONTENT */}
       <main className="flex-1 p-10">
         {view === "overview" && (
           <div>
-            <h1 className="text-3xl font-bold mb-8">Bem-vindo, {user.email}</h1>
+            <h1 className="text-3xl font-bold mb-8">Welcome, {user.email}</h1>
             {!isAdmin && profile && (
               <div className="bg-white p-8 rounded-3xl border shadow-sm max-w-2xl">
                 <div className="flex justify-between mb-2 font-bold">
-                  <span>Progresso do Curso</span>
+                  <span>Course progress</span>
                   <span className="text-blue-600">
-                    {lessonsCompleted} / {totalLessons} aulas
+                    {lessonsCompleted} / {totalLessons} lessons
                   </span>
                 </div>
                 <div className="w-full bg-slate-100 h-4 rounded-full overflow-hidden">
@@ -421,13 +422,13 @@ const Dashboard = () => {
                   />
                 </div>
                 <p className="mt-4 text-sm text-slate-500">
-                  Nível atual de inglês: {profile.english_level || "Por definir"}
+                  Current English level: {profile.english_level || "Not set yet"}
                 </p>
 
-                <h3 className="font-bold mt-8 mb-4">Os Meus Materiais</h3>
+                <h3 className="font-bold mt-8 mb-4">My materials</h3>
                 {materials.length === 0 ? (
                   <p className="text-slate-400 text-sm italic">
-                    Nenhum material enviado ainda.
+                    No materials received yet.
                   </p>
                 ) : (
                   materials.map((m) => (
@@ -446,7 +447,7 @@ const Dashboard = () => {
             )}
             {isAdmin && (
               <div className="p-10 border-2 border-dashed rounded-3xl text-slate-400 text-center">
-                Painel de Controlo Ativo. Seleciona uma opção no menu lateral.
+                Admin control panel active. Choose an option from the sidebar.
               </div>
             )}
           </div>
@@ -455,11 +456,11 @@ const Dashboard = () => {
         {view === "courses" && (
           <section>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">Catálogo de Cursos</h2>
+              <h2 className="text-2xl font-bold">Course catalogue</h2>
               {isAdmin && (
                 <div className="bg-white p-4 rounded-xl border flex gap-2">
                   <input
-                    placeholder="Título"
+                    placeholder="Title"
                     className="border p-2 rounded text-sm"
                     value={newCourse.title}
                     onChange={(e) =>
@@ -470,7 +471,7 @@ const Dashboard = () => {
                     onClick={handleCreateCourse}
                     className="bg-blue-600 text-white px-4 rounded text-sm"
                   >
-                    Criar
+                    Create
                   </button>
                 </div>
               )}
@@ -483,11 +484,11 @@ const Dashboard = () => {
                 >
                   <h3 className="font-bold text-lg">{c.title}</h3>
                   <p className="text-slate-400 text-sm mt-2">
-                    {c.description || "Sem descrição."}
+                    {c.description || "No description."}
                   </p>
                   {!isAdmin && (
                     <button className="mt-4 w-full bg-slate-900 text-white py-2 rounded-lg text-sm">
-                      Solicitar Inscrição
+                      Request enrollment
                     </button>
                   )}
                 </div>
@@ -498,15 +499,15 @@ const Dashboard = () => {
 
         {isAdmin && view === "students" && (
           <section>
-            <h2 className="text-2xl font-bold mb-4">Alunos</h2>
+            <h2 className="text-2xl font-bold mb-4">Students</h2>
             <div className="bg-white rounded-3xl border shadow-sm p-6">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-slate-400 border-b">
                     <th className="py-2">Email</th>
-                    <th>Cargo</th>
+                    <th>Role</th>
                     <th>Status</th>
-                    <th>Nível</th>
+                    <th>Level</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -528,12 +529,12 @@ const Dashboard = () => {
           <section className="space-y-8">
             <div>
               <h2 className="text-2xl font-bold mb-4">
-                Pedidos de Admissão (Guests)
+                Admission requests (guests)
               </h2>
               <div className="bg-white rounded-3xl border shadow-sm p-6 space-y-2">
                 {studentPending.length === 0 && (
                   <p className="text-sm text-slate-500">
-                    Sem pedidos de admissão pendentes.
+                    No admission requests pending.
                   </p>
                 )}
                 {studentPending.map((s) => (
@@ -549,7 +550,7 @@ const Dashboard = () => {
                       onClick={() => handleApproveProfile(s.id)}
                       className="text-xs bg-emerald-500 text-white px-3 py-1 rounded-full flex items-center gap-1"
                     >
-                      <Check size={14} /> Aprovar como Aluno
+                      <Check size={14} /> Approve as student
                     </button>
                   </div>
                 ))}
@@ -558,12 +559,12 @@ const Dashboard = () => {
 
             <div>
               <h2 className="text-2xl font-bold mb-4">
-                Pedidos de Inscrição em Cursos
+                Course enrollment requests
               </h2>
               <div className="bg-white rounded-3xl border shadow-sm p-6 space-y-2">
                 {enrollmentPending.length === 0 && (
                   <p className="text-sm text-slate-500">
-                    Sem pedidos de inscrição pendentes.
+                    No course enrollment requests pending.
                   </p>
                 )}
                 {enrollmentPending.map((e) => (
@@ -572,7 +573,7 @@ const Dashboard = () => {
                     className="flex items-center justify-between text-sm"
                   >
                     <span>
-                      {e.profiles?.email} pediu acesso a{" "}
+                      {e.profiles?.email} requested access to{" "}
                       <span className="font-semibold">
                         {e.courses?.title}
                       </span>
@@ -581,7 +582,7 @@ const Dashboard = () => {
                       onClick={() => handleApproveEnrollment(e.id)}
                       className="text-xs bg-blue-600 text-white px-3 py-1 rounded-full flex items-center gap-1"
                     >
-                      <Check size={14} /> Aprovar
+                      <Check size={14} /> Approve
                     </button>
                   </div>
                 ))}
@@ -592,16 +593,16 @@ const Dashboard = () => {
 
         {isAdmin && view === "materials" && (
           <section className="space-y-6">
-            <h2 className="text-2xl font-bold mb-4">Gestão de Materiais</h2>
+            <h2 className="text-2xl font-bold mb-4">Learning materials</h2>
             <div className="bg-white rounded-3xl border shadow-sm p-6 space-y-4 max-w-xl">
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold">Selecionar aluno</label>
+                <label className="text-sm font-semibold">Select student</label>
                 <select
                   className="border rounded p-2 text-sm"
                   value={selectedStudentId}
                   onChange={(e) => setSelectedStudentId(e.target.value)}
                 >
-                  <option value="">Escolhe um aluno</option>
+                  <option value="">Choose a student</option>
                   {students
                     .filter((s) => s.role === "student" && s.status === "active")
                     .map((s) => (
@@ -613,23 +614,21 @@ const Dashboard = () => {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold">Link do ficheiro</label>
+                <label className="text-sm font-semibold">File link</label>
                 <input
                   className="border rounded p-2 text-sm"
-                  placeholder="URL do PDF / Vídeo / etc."
+                  placeholder="URL of PDF / video / etc."
                   value={materialUrl}
                   onChange={(e) => setMaterialUrl(e.target.value)}
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold">
-                  Descrição do material
-                </label>
+                <label className="text-sm font-semibold">Material description</label>
                 <textarea
                   className="border rounded p-2 text-sm"
                   rows={3}
-                  placeholder="Ex.: Exercícios de listening – Sprint 1"
+                  placeholder="e.g. Listening practice – Sprint 1"
                   value={materialDesc}
                   onChange={(e) => setMaterialDesc(e.target.value)}
                 />
@@ -639,7 +638,7 @@ const Dashboard = () => {
                 onClick={handleSendMaterial}
                 className="mt-2 inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded text-sm"
               >
-                <Send size={16} /> Enviar para o aluno
+                <Send size={16} /> Send to student
               </button>
             </div>
           </section>
@@ -649,33 +648,36 @@ const Dashboard = () => {
   )
 }
 
-// --------- AUTENTICAÇÃO SIMPLES (PLACEHOLDER) ---------
+// --------- AUTH PAGE (OPTIONAL ROUTE) ---------
 const AuthComponent = () => {
   const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({ provider: "google" })
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: REDIRECT_URL },
+    })
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-950 text-slate-50">
       <div className="bg-slate-900 p-10 rounded-3xl max-w-md w-full border border-slate-800">
-        <h1 className="text-2xl font-bold mb-4">Entrar na Dimas Learning</h1>
+        <h1 className="text-2xl font-bold mb-4">Sign in to Dimas Learning</h1>
         <p className="text-sm text-slate-300 mb-6">
-          Usa o teu email Google para aceder aos cursos personalizados de Inglês
-          Técnico para IT.
+          Use your Google account to access your personalized Technical English
+          coaching.
         </p>
         <button
           onClick={handleLogin}
           className="w-full rounded-xl bg-blue-600 py-2 text-sm font-semibold flex items-center justify-center gap-2"
         >
           <GraduationCap size={18} />
-          Entrar com Google
+          Sign in with Google
         </button>
       </div>
     </div>
   )
 }
 
-// --------- APP ROOT ---------
+// --------- ROOT APP ---------
 export default function App() {
   return (
     <HashRouter>
