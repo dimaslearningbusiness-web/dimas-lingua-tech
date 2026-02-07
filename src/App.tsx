@@ -83,12 +83,9 @@ const PublicHome = () => {
     loadCourses()
   }, [])
 
-  const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: REDIRECT_URL },
-    })
-  }
+  const handleLogin = () => {
+  navigate("/auth")
+}
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50">
