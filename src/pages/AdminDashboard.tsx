@@ -25,6 +25,8 @@ type LessonBooking = {
 };
 
 export default function AdminDashboardSupabase() {
+  console.log("ADMIN DASHBOARD NOVO CARREGADO");
+
   const [courses, setCourses] = useState<Course[]>([]);
   const [enrollmentRequests, setEnrollmentRequests] = useState<EnrollmentRequest[]>([]);
   const [lessonRequests, setLessonRequests] = useState<LessonBooking[]>([]);
