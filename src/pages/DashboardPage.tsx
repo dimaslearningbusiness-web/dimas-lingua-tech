@@ -3,6 +3,9 @@ import { useAuthProfile } from '@/hooks/useAuthProfile'
 import AdminDashboard from '@/modules/admin/AdminDashboard'
 import StudentDashboard from '@/modules/student/StudentDashboard'
 import GuestPendingView from '@/modules/guest/GuestPendingView'
+import AdminDashboard from '@/modules/admin/AdminDashboard'
+import AdminDashboardSupabase from '@/modules/admin/AdminDashboardSupabase'
+
 
 export default function DashboardPage() {
   const { loading, profile } = useAuthProfile()
@@ -11,7 +14,9 @@ export default function DashboardPage() {
 
   if (!profile) return <div className="p-6">Por favor, faça login.</div>
 
-  if (profile.role === 'admin') return <AdminDashboard />
+ if (profile.role === 'admin') return <AdminDashboardSupabase />
+
+
   if (profile.role === 'student' && profile.status === 'active') return <StudentDashboard />
   if (profile.role === 'guest' && profile.status === 'pending') return <GuestPendingView />
 
