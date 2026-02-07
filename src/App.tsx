@@ -20,7 +20,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const ADMIN_EMAIL = "dimaslearningbusiness@gmail.com"
 
 // IMPORTANT: adjust this later to your GitHub Pages URL
-const REDIRECT_URL = window.location.origin + window.location.pathname
+
 
 // --------- AUTH + PROFILE HOOK ---------
 const useAuthProfile = () => {
