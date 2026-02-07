@@ -75,6 +75,7 @@ export default function AdminDashboard() {
     navigate('/');
   };
   
+  
   const handleAddCourse = () => {
     const newCourse: Course = {
       id: `course-${Date.now()}`,
@@ -125,6 +126,32 @@ export default function AdminDashboard() {
       instructor: '',
     });
   };
+  // dentro de AdminDashboard
+const { data: pendingEnrollments } = useQuery({
+  queryKey: ['pending-enrollments'],
+  queryFn: async () => {
+    const { data, error } = await supabase
+      .from('enrollments')
+      .select('id, status, course_id, student_id, courses(title), profiles(email)')
+      .eq('status', 'pending')
+    if (error) throw error
+    return data
+  },
+})
+
+const approveEnrollment = useMutation({
+  mutationFn: async (id: string) => {
+    const { error } = await supabase
+      .from('enrollments')
+      .update({ status: 'approved' })
+      .eq('id', id)
+    if (error) throw error
+  },
+  onSuccess: () => {
+    qc.invalidateQueries({ queryKey: ['pending-enrollments'] })
+  },
+})
+
   
   const openEditDialog = (course: Course) => {
     setFormData({
